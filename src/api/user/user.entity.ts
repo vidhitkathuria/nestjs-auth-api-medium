@@ -1,13 +1,20 @@
 import { Exclude } from 'class-transformer';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, JoinColumn } from 'typeorm';
+import { Order } from '../order/order.entity';
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id!: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: false, default: '' })
   public email!: string;
+
+  @Column({ type: 'boolean', nullable: false })
+  public isAdmin: boolean;
+
+  @OneToMany(() => Order, (order) => order.user)
+  @JoinColumn()
+  orders: Order[];
 
   @Exclude()
   @Column({ type: 'varchar' })

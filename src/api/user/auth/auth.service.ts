@@ -13,8 +13,10 @@ export class AuthService {
   @Inject(AuthHelper)
   private readonly helper: AuthHelper;
 
+  //Registers a user
   public async register(body: RegisterDto): Promise<User | never> {
-    const { name, email, password }: RegisterDto = body;
+    const { name, email, password, isAdmin }: RegisterDto = body;
+    console.log(body);
     let user: User = await this.repository.findOne({ where: { email } });
 
     if (user) {
@@ -26,10 +28,13 @@ export class AuthService {
     user.name = name;
     user.email = email;
     user.password = this.helper.encodePassword(password);
+    user.isAdmin = isAdmin;
+    //console.log(isAdmin);
 
     return this.repository.save(user);
   }
 
+  //Login a user
   public async login(body: LoginDto): Promise<string | never> {
     const { email, password }: LoginDto = body;
     const user: User = await this.repository.findOne({ where: { email } });
@@ -49,9 +54,14 @@ export class AuthService {
     return this.helper.generateToken(user);
   }
 
+  //Refreshes the user only if he is authenticated
   public async refresh(user: User): Promise<string> {
     this.repository.update(user.id, { lastLoginAt: new Date() });
 
     return this.helper.generateToken(user);
+  }
+
+  async getUserById(id: number): Promise<User | undefined> {
+    return this.repository.findOne(id);
   }
 }

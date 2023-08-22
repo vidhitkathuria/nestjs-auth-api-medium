@@ -1,5 +1,5 @@
 import { Trim } from 'class-sanitizer';
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsBoolean, IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class RegisterDto {
   @Trim()
@@ -13,6 +13,9 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   public readonly name?: string;
+
+  @IsBoolean()
+  public readonly isAdmin: boolean;
 }
 
 export class LoginDto {
