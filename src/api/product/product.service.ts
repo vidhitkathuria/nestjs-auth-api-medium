@@ -24,7 +24,7 @@ export class ProductService {
     return this.productRepository.save(product);
   }
 
-  findSingleProduct(product_id: number, user:User) {
+  findSingleProduct(product_id: number, user: User) {
     if (!user.isAdmin) {
       throw new ForbiddenException('Only Admin User can retrieve a product');
     }
@@ -41,5 +41,9 @@ export class ProductService {
 
   remove(id: number) {
     return `This action removes a #${id} product`;
+  }
+
+  async findByIds(productIds: number[]): Promise<Product[]> {
+    return this.productRepository.findByIds(productIds);
   }
 }
