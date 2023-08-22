@@ -27,10 +27,11 @@ export class CreateOrderDto {
 }
 
 export class ProductDto {
+
+  @IsInt()
+  product_id: number;
+
+  @IsInt()
   @IsNotEmpty()
-  product_name: string;
-
-  @IsNumber()
-  price: number;
-} 
-
+  quantity: number;
+}
