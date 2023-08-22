@@ -6,8 +6,9 @@ import { Order } from './order.entity';
 import { AuthModule } from '@/api/user/auth/auth.module';
 import { AuthService } from '../user/auth/auth.service';
 import { UserModule } from '../user/user.module';
+import { ProductModule } from '../product/product.module';
 @Module({
-  imports: [TypeOrmModule.forFeature([Order]), AuthModule, UserModule],
+  imports: [TypeOrmModule.forFeature([Order]), AuthModule, UserModule, ProductModule],
   controllers: [OrderController],
   providers: [OrderService],
 })

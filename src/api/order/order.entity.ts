@@ -16,4 +16,9 @@ export class Order {
 
   @Column('decimal', { precision: 10, scale: 2 })
   totalAmount: number;
+  @Column('integer', { array: true, nullable: true }) // New column to store product IDs
+  productIds: number[];
+
+  @Column('integer', { nullable: false, default: 1 })
+  quantity: number;
 }

@@ -44,7 +44,7 @@ export class OrderController {
   @Post('createOrder')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+  async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<OrderResponseDto> {
     return this.orderService.createOrder(createOrderDto);
   }
 
