@@ -6,6 +6,11 @@ export class OrderResponseDto {
   }
   
   export class ProductResponseDto {
+    product_id: number;
     product_name: string;
+    description: string;
     price: number;
+    imgUrl: string;
+    category: string;
+    rating: number;
   }

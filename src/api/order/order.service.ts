@@ -37,8 +37,13 @@ export class OrderService {
       user_id: savedOrder.user.id,
       order_id: savedOrder.order_id,
       products: savedOrder.products.map((product) => ({
+        product_id: product.product_id,
         product_name: product.product_name,
         price: product.price,
+        rating: product.rating,
+        imgUrl: product.imgUrl,
+        category: product.category,
+        description: product.description,
       })),
       totalAmount: savedOrder.totalAmount,
     };
