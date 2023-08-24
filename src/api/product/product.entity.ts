@@ -1,5 +1,11 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
+enum ProductCategory {
+  HomeDecor = 'home_decor',
+  Electronics = 'electronics',
+  Fashion = 'fashion',
+}
+
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
@@ -13,6 +19,19 @@ export class Product {
 
   @Column('decimal', { precision: 10, scale: 2, nullable: true })
   price: number;
+
+  @Column({ nullable: true })
+  imgUrl: string;
+
+  @Column({
+    type: 'enum',
+    enum: ProductCategory,
+    default: ProductCategory.HomeDecor,
+  })
+  category: ProductCategory;
+
+  @Column({ type: 'decimal', precision: 3, scale: 2, nullable: true })
+  rating: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
