@@ -1,4 +1,15 @@
-import { Body, Controller, Inject, Post, ClassSerializerInterceptor, UseInterceptors, UseGuards,Get, Req, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+  UseGuards,
+  Get,
+  Req,
+  Param,
+} from '@nestjs/common';
 import { User } from '@/api/user/user.entity';
 import { RegisterDto, LoginDto } from './auth.dto';
 import { JwtAuthGuard } from './auth.guard';
@@ -18,7 +29,9 @@ export class AuthController {
   }
 
   @Post('login')
-  private login(@Body() body: LoginDto): Promise<string | never> {
+  private login(
+    @Body() body: LoginDto,
+  ): Promise<{ userId: number; name: string; email: string; token: string; message: string }> {
     return this.service.login(body);
   }
 
@@ -30,7 +43,7 @@ export class AuthController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getUserById(@Param('id') user_id:number){
-       return this.service.getUserById(+user_id)
+  async getUserById(@Param('id') user_id: number) {
+    return this.service.getUserById(+user_id);
   }
 }

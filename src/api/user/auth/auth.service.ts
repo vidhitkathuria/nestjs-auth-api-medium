@@ -1,10 +1,9 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@/api/user/user.entity';
 import { Repository } from 'typeorm';
 import { RegisterDto, LoginDto } from './auth.dto';
 import { AuthHelper } from './auth.helper';
-
 @Injectable()
 export class AuthService {
   @InjectRepository(User)
@@ -16,13 +15,13 @@ export class AuthService {
   //Registers a user
   public async register(body: RegisterDto): Promise<User | never> {
     const { name, email, password, isAdmin }: RegisterDto = body;
-    console.log(body);
     let user: User = await this.repository.findOne({ where: { email } });
 
     if (user) {
       throw new HttpException('Conflict', HttpStatus.CONFLICT);
     }
 
+    const decoded_id = this.helper.validateUser;
     user = new User();
 
     user.name = name;
@@ -35,7 +34,7 @@ export class AuthService {
   }
 
   //Login a user
-  public async login(body: LoginDto): Promise<string | never> {
+  public async login(body: LoginDto): Promise<{ userId: number; name: string; email: string; token: string; message: string }> {
     const { email, password }: LoginDto = body;
     const user: User = await this.repository.findOne({ where: { email } });
 
@@ -51,7 +50,16 @@ export class AuthService {
 
     this.repository.update(user.id, { lastLoginAt: new Date() });
 
-    return this.helper.generateToken(user);
+    const token: string = this.helper.generateToken(user);
+
+    const response: { userId: number; name: string; email: string; token: string; message: string } = {
+      userId: user.id,
+      name: user.name,
+      email: user.email,
+      token: token,
+      message: 'User logged in succesfully',
+    };
+    return response;
   }
 
   //Refreshes the user only if he is authenticated
