@@ -19,8 +19,6 @@ import { IsArray, IsInt, IsNotEmpty, IsNumber, IsString } from 'class-validator'
 // }
 
 export class CreateOrderDto {
-  @IsInt()
-  user_id: number;
 
   @IsArray()
   products: ProductDto[];

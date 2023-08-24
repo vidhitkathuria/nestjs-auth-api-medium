@@ -1,21 +1,3 @@
-// import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-// import { OrderService } from './order.service';
-// import { CreateOrderDto } from './dto/create-order.dto';
-// import { UpdateOrderDto } from './dto/update-order.dto';
-
-// @Controller('order')
-// export class OrderController {
-//   constructor(private readonly orderService: OrderService) {}
-
-//   @Post()
-//   create(@Body() createOrderDto: CreateOrderDto) {
-//     return this.orderService.createOrder(createOrderDto);
-//   }
-
-// }
-
-// order.controller.ts
-
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './order.entity';
@@ -36,6 +18,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { OrderResponseDto } from './dto/order-response.dto';
+import { AuthService } from '../user/auth/auth.service';
 
 @Controller('orders')
 export class OrderController {
@@ -44,8 +27,8 @@ export class OrderController {
   @Post('createOrder')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<OrderResponseDto> {
-    return this.orderService.createOrder(createOrderDto);
+  async createOrder(@Body() createOrderDto: CreateOrderDto, @Req() request): Promise<OrderResponseDto> {
+    return this.orderService.createOrder(createOrderDto, request.user);
   }
 
   @Get()

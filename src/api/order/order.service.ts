@@ -16,27 +16,27 @@ export class OrderService {
     @InjectRepository(Order) private orderRepository: Repository<Order>,
     private readonly productService: ProductService,
   ) {}
-  async createOrder(createOrderDto: CreateOrderDto): Promise<OrderResponseDto> {
-    const { user_id, products } = createOrderDto;
-  
+  async createOrder(createOrderDto: CreateOrderDto, user: User): Promise<OrderResponseDto> {
+    const { products } = createOrderDto;
+
     const fetchedProducts = await this.productService.findByIds(products.map((p) => p.product_id));
     const totalAmount = fetchedProducts.reduce((sum, product) => {
-      const matchingProduct = products.find(p => p.product_id === product.product_id);
+      const matchingProduct = products.find((p) => p.product_id === product.product_id);
       return sum + product.price * matchingProduct.quantity;
     }, 0);
-  
+
     const order = this.orderRepository.create({
-      user: { id: user_id },
+      user: user,
       products: fetchedProducts, // Assign fetchedProducts instead of the original products array
       totalAmount,
     });
-  
+
     const savedOrder = await this.orderRepository.save(order);
-  
+
     return {
       user_id: savedOrder.user.id,
       order_id: savedOrder.order_id,
-      products: savedOrder.products.map(product => ({
+      products: savedOrder.products.map((product) => ({
         product_name: product.product_name,
         price: product.price,
       })),
